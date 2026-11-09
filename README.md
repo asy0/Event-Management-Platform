@@ -1,7 +1,7 @@
 # Event-Management-Platform CatchUp
 Eine Web-basierte Plattform auf der Veranstalter Events organisieren, bearbeiten und absagen können.
 
-# CatchUp – Event Management Platform
+# CatchUp - Find events. Meet people. Make memories.
 ## 1. Projektbeschreibung
 CatchUp ist eine webbasierte Event-Management-Plattform, mit der Veranstaltungen erstellt, verwaltet und organisiert werden können.
 Die Plattform ermöglicht Veranstaltern, Events anzulegen, Informationen zu bearbeiten, Teilnehmeranmeldungen zu verwalten und die Anzahl der verfügbaren Plätze zu kontrollieren.
