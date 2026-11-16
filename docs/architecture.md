@@ -306,3 +306,160 @@ Das Modell verwendet drei zentrale Tabellen und vermeidet unnötige Komplexität
 Eine separate Rollentabelle, Ticketverwaltung und Zahlungsdaten sind für das MVP nicht erforderlich.
 
 Die konkrete Umsetzung von Datenbank-Constraints und Transaktionen wird in der Implementierungsphase festgelegt.
+
+
+## 11. Schnittstellen- und API-Design
+
+### 11.1 Ziel
+
+Die CatchUp-Plattform verwendet eine REST-API zur Kommunikation zwischen Weboberfläche und Backend.
+
+Die API ermöglicht die Verwaltung von Benutzern, Veranstaltungen und Teilnehmeranmeldungen.
+
+Die Endpunkte werden unter `/api/v1` bereitgestellt. Das API-Design ist eine geplante Spezifikation und wird in einer späteren Phase implementiert.
+
+### 11.2 Allgemeine Konventionen
+
+- Datenformat: JSON
+- Kommunikation: HTTPS im Produktivbetrieb
+- HTTP-Methoden: GET, POST, PATCH und DELETE
+- Authentifizierung: serverseitige Sessions mit sicheren Cookies
+- Zugriffskontrolle: rollenbasiert (Teilnehmer und Veranstalter)
+- Datumsformat: ISO 8601 mit Zeitzonenangabe
+- Fehlerantworten: einheitliches JSON-Format
+- Passwörter werden niemals in API-Antworten zurückgegeben.
+
+### 11.3 API-Endpunkte
+
+| Methode | Endpunkt | Beschreibung | Zugriff |
+|---|---|---|---|
+| POST | /api/v1/auth/register | Benutzer registrieren | Öffentlich |
+| POST | /api/v1/auth/login | Benutzer anmelden | Öffentlich |
+| POST | /api/v1/auth/logout | Benutzer abmelden | Angemeldet |
+| GET | /api/v1/events | Events anzeigen, suchen und filtern | Öffentlich |
+| GET | /api/v1/events/:id | Eventdetails anzeigen | Öffentlich |
+| POST | /api/v1/events | Event erstellen | Veranstalter |
+| PATCH | /api/v1/events/:id | Eigenes Event bearbeiten | Veranstalter |
+| POST | /api/v1/events/:id/cancel | Eigenes Event absagen | Veranstalter |
+| POST | /api/v1/events/:id/registrations | Für ein Event anmelden | Teilnehmer |
+| GET | /api/v1/me/registrations | Eigene Anmeldungen anzeigen | Teilnehmer |
+| DELETE | /api/v1/registrations/:id | Eigene Anmeldung stornieren | Teilnehmer |
+| GET | /api/v1/events/:id/registrations | Teilnehmerliste anzeigen | Eventveranstalter |
+
+### 11.4 Beispiel: Eventliste abrufen
+
+**Request**
+
+GET /api/v1/events?city=Wien&category=Workshop
+
+**Response – HTTP 200**
+
+```json
+{
+  "events": [
+    {
+      "id": 15,
+      "title": "Web Development Workshop",
+      "location": "Wien",
+      "start_at": "2027-03-15T14:00:00+01:00",
+      "max_participants": 30,
+      "available_places": 12,
+      "status": "published"
+    }
+  ]
+}
+```
+
+### 11.5 Beispiel: Event erstellen
+
+**Request**
+
+POST /api/v1/events
+
+```json
+{
+  "title": "Web Development Workshop",
+  "description": "Ein Workshop für Einsteiger.",
+  "location": "Wien",
+  "start_at": "2027-03-15T14:00:00+01:00",
+  "end_at": "2027-03-15T17:00:00+01:00",
+  "max_participants": 30
+}
+```
+
+**Response – HTTP 201**
+
+```json
+{
+  "id": 15,
+  "status": "draft",
+  "message": "Event erfolgreich erstellt."
+}
+```
+
+Die Veranstalter-ID wird aus der authentifizierten Session ermittelt und nicht vom Client übernommen.
+
+### 11.6 Beispiel: Eventanmeldung
+
+**Request**
+
+POST /api/v1/events/15/registrations
+
+Der angemeldete Benutzer wird über seine Session identifiziert.
+
+**Response – HTTP 201**
+
+```json
+{
+  "registration_id": 48,
+  "event_id": 15,
+  "status": "confirmed",
+  "message": "Anmeldung erfolgreich."
+}
+```
+
+### 11.7 Fehlerbehandlung
+
+| HTTP-Code | Bedeutung |
+|---|---|
+| 400 | Ungültige Eingabedaten |
+| 401 | Benutzer nicht angemeldet |
+| 403 | Keine Berechtigung |
+| 404 | Ressource nicht gefunden |
+| 409 | Doppelanmeldung, ausgebuchtes oder nicht buchbares Event |
+| 500 | Interner Serverfehler |
+
+**Beispiel – HTTP 409**
+
+```json
+{
+  "error": {
+    "code": "EVENT_FULL",
+    "message": "Keine freien Plätze verfügbar."
+  }
+}
+```
+
+### 11.8 Sicherheits- und Geschäftsregeln
+
+- Eingaben werden serverseitig validiert.
+- Passwörter werden mit einem geeigneten Passwort-Hashing-Verfahren gespeichert.
+- Session-Cookies verwenden HttpOnly, Secure und SameSite.
+- Zustandsändernde Anfragen werden gegen CSRF geschützt.
+- Veranstalter dürfen nur ihre eigenen Events bearbeiten.
+- Teilnehmer dürfen nur ihre eigenen Anmeldungen stornieren.
+- Nur veröffentlichte und nicht abgesagte Events können gebucht werden.
+- Doppelanmeldungen werden durch eine eindeutige Datenbankregel verhindert.
+- Kapazitätsprüfung und Anmeldung erfolgen atomar innerhalb einer Datenbanktransaktion.
+- Stornierte Anmeldungen werden bei der Kapazitätsberechnung nicht berücksichtigt.
+- Fehlerantworten enthalten keine Passwörter oder internen Systemdetails.
+
+### 11.9 Kritische Bewertung
+
+REST wurde aufgrund seiner einfachen Struktur, guten Dokumentierbarkeit und breiten Unterstützung gewählt.
+
+Eine separate Bereitstellung des Backends ist dafür nicht notwendig. Die API kann innerhalb des modularen Monolithen implementiert werden.
+
+Die Session-Authentifizierung ist eine vorläufige Designentscheidung. Ihre Umsetzung, der CSRF-Schutz und die Berechtigungsregeln müssen in der Implementierungsphase getestet werden.
+
+Die API ist derzeit ein Entwurf. Die endgültigen Schnittstellen werden mit dem Projektteam abgestimmt.
