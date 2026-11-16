@@ -61,15 +61,29 @@ SQLite ist eine leichtgewichtige relationale Datenbank, die Daten in einer lokal
 
 Für CatchUp wird PostgreSQL als primäre Datenbank vorgeschlagen.
 
+
 ## 5. Begründung
 
-Die Plattform muss mehrere gleichzeitige Anmeldungen zu Veranstaltungen verarbeiten können.
+Die CatchUp-Plattform muss Veranstaltungen und mehrere gleichzeitige Teilnehmeranmeldungen zuverlässig verwalten können.
 
-PostgreSQL unterstützt Transaktionen und geeignete Sperrmechanismen, mit denen die Kapazitätskontrolle zuverlässig umgesetzt werden kann.
+PostgreSQL unterstützt ACID-Transaktionen, Fremdschlüssel, Integritätsbedingungen und geeignete Sperrmechanismen.
 
-Außerdem bietet PostgreSQL umfangreiche Möglichkeiten zur Sicherstellung der Datenintegrität.
+Das Datenmodell des MVP besteht aus vier zentralen Tabellen:
 
-Die Tabellen USERS, EVENTS und REGISTRATIONS können über Primär- und Fremdschlüssel miteinander verbunden werden.
+- ORGANIZERS: Speichert Veranstalterkonten und Zugangsdaten.
+- EVENTS: Speichert Veranstaltungen und deren Kapazitäten.
+- PARTICIPANTS: Speichert Namen und E-Mail-Adressen der Teilnehmer.
+- REGISTRATIONS: Verknüpft Teilnehmer mit Veranstaltungen und speichert den Anmeldestatus.
+
+Teilnehmer benötigen im MVP kein Benutzerkonto. Sie können sich direkt mit ihrem Namen und ihrer E-Mail-Adresse für eine Veranstaltung anmelden.
+
+Die Tabellen werden über Primär- und Fremdschlüssel miteinander verbunden.
+
+Die Kombination aus event_id und participant_id wird als eindeutig definiert, um doppelte Anmeldungen zu verhindern.
+
+Die Kapazitätsprüfung und Speicherung einer Anmeldung müssen innerhalb einer Datenbanktransaktion erfolgen. Dabei sind geeignete Sperrmechanismen erforderlich, damit gleichzeitige Anfragen nicht zu Überbuchungen führen.
+
+PostgreSQL wird aufgrund dieser Anforderungen als geeignete Datenbank für CatchUp vorgeschlagen.
 
 ## 6. Konsequenzen
 
@@ -86,23 +100,17 @@ Die Tabellen USERS, EVENTS und REGISTRATIONS können über Primär- und Fremdsch
 - Datenbank-Hosting muss berücksichtigt werden
 - Das Team benötigt grundlegende PostgreSQL-Kenntnisse
 
-## 7. Risiken und Gegenmaßnahmen
-
-**Risiko: Überbuchung bei gleichzeitigen Anmeldungen**
-
-Gegenmaßnahme: Kapazitätsprüfung und Anmeldung innerhalb einer Transaktion mit geeigneter Sperrstrategie.
 
 **Risiko: Doppelanmeldungen**
 
-Gegenmaßnahme: Eindeutige Datenbankregel für die Kombination aus Benutzer und Event.
+Gegenmaßnahme: Die E-Mail-Adresse eines Teilnehmers wird in der Tabelle PARTICIPANTS eindeutig gespeichert.
 
-**Risiko: Fehlerhafte Daten**
+Zusätzlich wird in REGISTRATIONS eine UNIQUE-Constraint für die Kombination aus event_id und participant_id definiert.
 
-Gegenmaßnahme: Fremdschlüssel, Constraints und serverseitige Validierung.
+Dadurch kann sich dieselbe E-Mail-Adresse nicht mehrfach für dieselbe Veranstaltung anmelden.
 
-**Risiko: Datenverlust**
+Die Prüfung erfolgt serverseitig und wird durch Datenbank-Constraints abgesichert.
 
-Gegenmaßnahme: Regelmäßige Backups und dokumentierter Wiederherstellungsprozess.
 
 ## 8. AI-Unterstützung und kritische Reflexion
 
@@ -114,10 +122,15 @@ Die Entscheidung für PostgreSQL basiert insbesondere auf der geplanten gleichze
 
 Die KI-Empfehlung wurde kritisch betrachtet, da PostgreSQL allein keine Überbuchungen verhindert. Dafür ist zusätzlich eine korrekte Implementierung der Geschäftslogik erforderlich.
 
+
 ## 9. Offene Punkte
 
 - PostgreSQL-Kenntnisse im Team überprüfen
-- Hostingkosten vergleichen
-- Backup-Strategie festlegen
-- Endgültige Entscheidung im Team bestätigen
+- Hostingkosten und Datenbankbetrieb bewerten
+- Backup- und Wiederherstellungsstrategie festlegen
+- Datenschutz und Aufbewahrung personenbezogener Daten prüfen
+- Endgültige Datenbankentscheidung im Team bestätigen
+
+Bis zur gemeinsamen Entscheidung bleibt der ADR-Status auf "Vorgeschlagen".
+
 
