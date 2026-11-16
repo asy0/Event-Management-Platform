@@ -286,17 +286,45 @@ Verbindet Benutzer mit Veranstaltungen und speichert den jeweiligen Anmeldestatu
 - Ein Event kann mehrere Anmeldungen besitzen.
 - Jede Anmeldung gehört genau einem Benutzer und einem Event.
 
+
 ### 10.5 Datenintegrität und Geschäftsregeln
 
-- Jede E-Mail-Adresse muss eindeutig sein.
+#### Benutzer
+
+- Jede E-Mail-Adresse ist eindeutig.
+- Passwörter werden ausschließlich als sichere Hashwerte gespeichert.
+- Veranstalter dürfen nur ihre eigenen Events verwalten.
+
+#### Veranstaltungen
+
+- Jedes Event gehört genau einem Veranstalter.
 - Die maximale Teilnehmerzahl muss größer als null sein.
-- Das Enddatum eines Events muss nach dem Startdatum liegen.
-- Die Kombination aus user_id und event_id muss eindeutig sein.
-- Abgesagte Anmeldungen zählen nicht zur belegten Kapazität.
-- Die Anzahl aktiver Anmeldungen darf die Eventkapazität nicht überschreiten.
-- Kapazitätsprüfung und Anmeldung müssen innerhalb einer Datenbanktransaktion erfolgen, um gleichzeitige Überbuchungen zu verhindern.
-- Nur berechtigte Veranstalter dürfen ihre Events bearbeiten.
-- Fremdschlüssel sichern die Beziehungen zwischen den Tabellen.
+- Das Enddatum muss nach dem Startdatum liegen.
+- Mögliche Eventstatus: draft, published, cancelled.
+- Nur veröffentlichte Events können gebucht werden.
+- Abgesagte Events bleiben zur Nachvollziehbarkeit gespeichert.
+- Abgesagte Events können keine neuen Anmeldungen erhalten.
+
+#### Teilnehmeranmeldungen
+
+- Jede Anmeldung gehört zu einem Benutzer und einem Event.
+- Mögliche Anmeldestatus: confirmed, cancelled.
+- Pro Benutzer und Event existiert höchstens ein Anmeldedatensatz.
+- Eine Stornierung setzt den Status auf cancelled.
+- Eine erneute Anmeldung reaktiviert den bestehenden Datensatz.
+- Stornierte Anmeldungen belegen keine Plätze.
+- Die Anzahl bestätigter Anmeldungen darf die maximale Kapazität nicht überschreiten.
+- Kapazitätsprüfung und Anmeldung erfolgen atomar innerhalb einer Datenbanktransaktion.
+
+#### MVP-Abgrenzung
+
+Nicht Bestandteil des MVP sind:
+
+- Online-Zahlungen
+- Ticketverkauf
+- QR-Code-Check-in
+- Automatisierte Marketingkampagnen
+
 
 ### 10.6 Kritische Bewertung
 
