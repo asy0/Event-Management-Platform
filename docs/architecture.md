@@ -229,9 +229,11 @@ Es berücksichtigt Benutzerrollen, Eventkapazitäten und die Vermeidung von Dopp
 
 
 
+
+```mermaid
 erDiagram
     USERS ||--o{ EVENTS : organisiert
-    USERS ||--o{ REGISTRATIONS : meldet_sich_an
+    USERS ||--o{ REGISTRATIONS : registriert
     EVENTS ||--o{ REGISTRATIONS : hat
 
     USERS {
@@ -263,6 +265,8 @@ erDiagram
         datetime registered_at
         string status
     }
+```
+
 
 ### 10.3 Beschreibung der Tabellen
 
