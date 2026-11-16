@@ -228,21 +228,17 @@ Das Datenmodell beschreibt die Speicherung von Benutzern, Veranstaltungen und An
 Es berücksichtigt Benutzerrollen, Eventkapazitäten und die Vermeidung von Doppelanmeldungen.
 
 
-
-
 ```mermaid
 erDiagram
-    USERS ||--o{ EVENTS : organisiert
-    USERS ||--o{ REGISTRATIONS : registriert
+    ORGANIZERS ||--o{ EVENTS : organisiert
     EVENTS ||--o{ REGISTRATIONS : hat
+    PARTICIPANTS ||--o{ REGISTRATIONS : registriert
 
-    USERS {
+    ORGANIZERS {
         int id PK
         string name
         string email UK
         string password_hash
-        string role
-        datetime created_at
     }
 
     EVENTS {
@@ -250,7 +246,6 @@ erDiagram
         int organizer_id FK
         string title
         string description
-        string category
         string location
         datetime start_at
         datetime end_at
@@ -258,14 +253,24 @@ erDiagram
         string status
     }
 
+    PARTICIPANTS {
+        int id PK
+        string name
+        string email UK
+    }
+
     REGISTRATIONS {
         int id PK
-        int user_id FK
         int event_id FK
+        int participant_id FK
         datetime registered_at
         string status
     }
 ```
+
+
+
+
 
 
 ### 10.3 Beschreibung der Tabellen
