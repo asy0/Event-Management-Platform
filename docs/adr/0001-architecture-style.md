@@ -4,11 +4,17 @@
 **Status:** Vorgeschlagen  
 **Datum:** 2026-11-16
 
+
 ## Kontext
 
-CatchUp ist eine webbasierte Event-Management-Plattform für die Verwaltung von Veranstaltungen, Benutzern und Teilnehmeranmeldungen.
+CatchUp ist eine webbasierte Event-Management-Plattform zur Verwaltung von Veranstaltungen und Teilnehmeranmeldungen.
+
+Veranstalter melden sich mit einem Benutzerkonto an, um eigene Veranstaltungen zu erstellen, zu bearbeiten und Teilnehmerlisten einzusehen.
+
+Teilnehmer benötigen im MVP kein Benutzerkonto. Sie können veröffentlichte Veranstaltungen ansehen und sich mit Name und E-Mail-Adresse anmelden.
 
 Das Projekt wird von einem kleinen Team innerhalb eines Semesters entwickelt. Die Architektur muss wartbar, sicher und mit begrenztem Aufwand umsetzbar sein.
+
 
 ## Betrachtete Alternativen
 
@@ -26,37 +32,59 @@ Frontend, Backend und Geschäftslogik werden als eine gemeinsam bereitgestellte 
 - Gemeinsame Bereitstellung der Komponenten
 - Keine unabhängige Skalierung einzelner Module
 
-### Option B: Getrennte Client-Server-Anwendungen
 
-Frontend und Backend werden unabhängig entwickelt und bereitgestellt. Die Kommunikation erfolgt über eine REST-API.
+### Option B: Separat bereitgestelltes Frontend und Backend
+
+Frontend und Backend werden als getrennte Anwendungen entwickelt und unabhängig bereitgestellt. Die Kommunikation erfolgt über eine REST-API.
 
 **Vorteile:**
-- Unabhängige Entwicklung und Bereitstellung
-- Flexible Erweiterungsmöglichkeiten
+
+- Unabhängige Bereitstellung von Frontend und Backend
+- Flexible Auswahl von Frontend-Technologien
+- Unabhängige Skalierung der beiden Anwendungen möglich
 - Klare API-Grenzen
 
 **Nachteile:**
+
 - Höherer Konfigurationsaufwand
 - Komplexeres Deployment
+- Zusätzlicher Aufwand für die Kommunikation zwischen Frontend und Backend
 - Zusätzliche Sicherheits- und Integrationsanforderungen
+
 
 ## Vorgeschlagene Entscheidung
 
 Für CatchUp wird ein modularer Monolith vorgeschlagen.
 
+Das Backend wird als eine Anwendung mit klar getrennten internen Modulen umgesetzt. Eine REST-API stellt die benötigten Funktionen für das Web-Frontend bereit.
+
 Die Anwendung soll intern in folgende Bereiche gegliedert werden:
 
-- Authentifizierung und Benutzerverwaltung
+- Authentifizierung und Veranstalterverwaltung
 - Eventverwaltung
+- Teilnehmerverwaltung
 - Teilnehmeranmeldungen
 - Kapazitätskontrolle
 - Datenzugriff
 
+Für das MVP ist keine Registrierung oder Anmeldung von Teilnehmern mit einem Benutzerkonto vorgesehen.
+
+Die konkrete Bereitstellung des Frontends und die endgültige Technologieauswahl werden vom Projektteam bestätigt.
+
+
 ## Begründung
 
-Die Architektur reduziert die technische Komplexität und unterstützt die Umsetzung der Kernfunktionen innerhalb eines Semesters.
+Ein modularer Monolith reduziert die technische und organisatorische Komplexität und unterstützt die Umsetzung der MVP-Kernfunktionen innerhalb eines Semesters.
 
-Eine REST-API kann innerhalb des Monolithen bereitgestellt werden, ohne Frontend und Backend separat betreiben zu müssen.
+Die einzelnen Fachbereiche können intern modular aufgebaut werden, ohne dass mehrere unabhängige Backend-Dienste betrieben werden müssen.
+
+Die REST-API ermöglicht eine klare Trennung zwischen Benutzeroberfläche und Geschäftslogik.
+
+Für die Kernfunktionen wie Teilnehmeranmeldung, Vermeidung von Doppelanmeldungen und Kapazitätskontrolle ist eine zentrale Geschäftslogik besonders hilfreich.
+
+Die vorgeschlagene Architektur kann später erweitert werden, ohne bereits im MVP eine komplexe verteilte Systemarchitektur einzuführen.
+
+
 
 ## Konsequenzen
 
