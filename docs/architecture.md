@@ -417,34 +417,56 @@ GET /api/v1/events?city=Wien&category=Workshop
 }
 ```
 
-### 11.5 Beispiel: Event erstellen
+
+### 11.5 Beispiel: Teilnehmer anmelden
 
 **Request**
 
-POST /api/v1/events
+POST /api/v1/events/15/registrations
 
 ```json
 {
-  "title": "Web Development Workshop",
-  "description": "Ein Workshop für Einsteiger.",
-  "location": "Wien",
-  "start_at": "2027-03-15T14:00:00+01:00",
-  "end_at": "2027-03-15T17:00:00+01:00",
-  "max_participants": 30
+  "name": "Anna Müller",
+  "email": "anna@example.com"
 }
 ```
 
-**Response – HTTP 201**
+**Validierung**
+
+- Name und E-Mail-Adresse sind Pflichtfelder.
+- Die E-Mail-Adresse muss gültig sein.
+- Das Event muss veröffentlicht sein.
+- Das Event darf noch nicht begonnen haben.
+- Es müssen freie Plätze vorhanden sein.
+- Die E-Mail-Adresse darf für dieses Event noch nicht registriert sein.
+
+**Response – HTTP 201 Created**
 
 ```json
 {
-  "id": 15,
-  "status": "draft",
-  "message": "Event erfolgreich erstellt."
+  "registration_id": 48,
+  "event_id": 15,
+  "participant": {
+    "name": "Anna Müller",
+    "email": "anna@example.com"
+  },
+  "status": "confirmed",
+  "message": "Anmeldung erfolgreich."
 }
 ```
 
-Die Veranstalter-ID wird aus der authentifizierten Session ermittelt und nicht vom Client übernommen.
+**Fehlerfälle**
+
+| HTTP-Code | Bedeutung |
+|---|---|
+| 400 | Ungültige Eingabedaten |
+| 404 | Veranstaltung nicht gefunden |
+| 409 | Event ausgebucht oder bereits angemeldet |
+| 422 | Veranstaltung nicht buchbar |
+| 500 | Interner Serverfehler |
+
+Die Registrierung und Kapazitätsprüfung erfolgen innerhalb einer Datenbanktransaktion, um Überbuchungen zu verhindern.
+
 
 ### 11.6 Beispiel: Eventanmeldung
 
