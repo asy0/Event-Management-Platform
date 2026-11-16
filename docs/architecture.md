@@ -227,12 +227,11 @@ Das Datenmodell beschreibt die Speicherung von Benutzern, Veranstaltungen und An
 
 Es berücksichtigt Benutzerrollen, Eventkapazitäten und die Vermeidung von Doppelanmeldungen.
 
-### 10.2 ER-Diagramm
 
-```mermaid
+
 erDiagram
     USERS ||--o{ EVENTS : organisiert
-    USERS ||--o{ REGISTRATIONS : erstellt
+    USERS ||--o{ REGISTRATIONS : meldet_sich_an
     EVENTS ||--o{ REGISTRATIONS : hat
 
     USERS {
@@ -249,6 +248,7 @@ erDiagram
         int organizer_id FK
         string title
         string description
+        string category
         string location
         datetime start_at
         datetime end_at
@@ -263,7 +263,6 @@ erDiagram
         datetime registered_at
         string status
     }
-```
 
 ### 10.3 Beschreibung der Tabellen
 
@@ -550,4 +549,6 @@ Die Kombination aus modularer Struktur, relationaler Datenbank und REST-API unte
 Die Architektur bleibt bewusst einfach, um die Umsetzung innerhalb eines Semesters zu ermöglichen.
 
 Vor Beginn der Implementierung müssen die offenen Entscheidungen gemeinsam im Team geklärt werden.
+
+
 
