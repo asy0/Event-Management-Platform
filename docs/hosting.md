@@ -22,7 +22,8 @@ Die Hosting-Lösung soll kostengünstig, sicher, zuverlässig und innerhalb eine
 - HTTPS-Unterstützung
 - Verbindung mit GitHub
 - Verwaltung von Umgebungsvariablen
-- Speicherung von Benutzer-, Event- und Anmeldedaten
+- Speicherung von Veranstalterkonten, Teilnehmerdaten, Veranstaltungen und Anmeldungen
+
 
 ### Nichtfunktionale Anforderungen
 
@@ -147,7 +148,7 @@ Für den späteren Betrieb sind folgende Maßnahmen vorgesehen:
 - HTTPS für alle externen Verbindungen
 - Sichere Speicherung von Passwörtern als Hashwerte
 - Datenbank-Zugangsdaten nicht im GitHub-Repository speichern
-- Zugriffskontrolle für Teilnehmer und Veranstalter
+- Authentifizierung für Veranstalter und Zugriffsschutz für Teilnehmerdaten; Teilnehmer benötigen im MVP kein Benutzerkonto.
 - Regelmäßige Backups und Wiederherstellungstests
 - Minimierung personenbezogener Daten
 - Festlegung von Lösch- und Aufbewahrungsfristen
