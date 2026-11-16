@@ -365,22 +365,33 @@ Die Endpunkte werden unter `/api/v1` bereitgestellt. Das API-Design ist eine gep
 - Fehlerantworten: einheitliches JSON-Format
 - Passwörter werden niemals in API-Antworten zurückgegeben.
 
-### 11.3 API-Endpunkte
+
+### 11.3 REST-API-Endpunkte – MVP
 
 | Methode | Endpunkt | Beschreibung | Zugriff |
 |---|---|---|---|
-| POST | /api/v1/auth/register | Benutzer registrieren | Öffentlich |
-| POST | /api/v1/auth/login | Benutzer anmelden | Öffentlich |
-| POST | /api/v1/auth/logout | Benutzer abmelden | Angemeldet |
-| GET | /api/v1/events | Events anzeigen, suchen und filtern | Öffentlich |
+| POST | /api/v1/auth/login | Veranstalter anmelden | Öffentlich |
+| POST | /api/v1/auth/logout | Veranstalter abmelden | Veranstalter |
+| GET | /api/v1/events | Veröffentlichte Events anzeigen | Öffentlich |
 | GET | /api/v1/events/:id | Eventdetails anzeigen | Öffentlich |
-| POST | /api/v1/events | Event erstellen | Veranstalter |
+| POST | /api/v1/events | Neues Event erstellen | Veranstalter |
 | PATCH | /api/v1/events/:id | Eigenes Event bearbeiten | Veranstalter |
-| POST | /api/v1/events/:id/cancel | Eigenes Event absagen | Veranstalter |
-| POST | /api/v1/events/:id/registrations | Für ein Event anmelden | Teilnehmer |
-| GET | /api/v1/me/registrations | Eigene Anmeldungen anzeigen | Teilnehmer |
-| DELETE | /api/v1/registrations/:id | Eigene Anmeldung stornieren | Teilnehmer |
+| GET | /api/v1/me/events | Eigene Events auflisten | Veranstalter |
+| POST | /api/v1/events/:id/registrations | Teilnehmer anmelden | Öffentlich |
 | GET | /api/v1/events/:id/registrations | Teilnehmerliste anzeigen | Eventveranstalter |
+
+### Funktionen außerhalb des MVP
+
+- Veranstalterregistrierung
+- Event löschen
+- Erweiterte Such- und Filterfunktionen
+- Teilnehmerabmeldung
+- Automatische E-Mail-Bestätigung
+- Online-Zahlungen und Ticketverkauf
+- QR-Code-Check-in
+
+Diese Funktionen werden nicht in der ersten Implementierung umgesetzt.
+
 
 ### 11.4 Beispiel: Eventliste abrufen
 
