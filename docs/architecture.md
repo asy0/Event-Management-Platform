@@ -128,6 +128,56 @@ Die endgültige Entscheidung erfolgt nach der Technologieauswahl und der Bewertu
 ## 7. AI-Unterstützung und Reflexion
 
 KI wurde zur Erstellung und Gegenüberstellung möglicher Architekturvarianten eingesetzt.
+## 8. Technologieauswahl
+
+### 8.1 Ziel
+
+Für CatchUp sollen Technologien ausgewählt werden, die eine sichere, wartbare und benutzerfreundliche Webanwendung ermöglichen.
+
+Die Auswahl berücksichtigt den Entwicklungsaufwand, die Teamkenntnisse, die Dokumentation und die Kosten.
+
+### 8.2 Vergleich möglicher Technologien
+
+| Bereich | Option A | Option B |
+|---|---|---|
+| Frontend | HTML, CSS, JavaScript | React |
+| Backend | Node.js mit Express | Python mit Django |
+| Datenbank | PostgreSQL | SQLite |
+| API | REST | GraphQL |
+
+### 8.3 Vorläufig empfohlener Technologie-Stack
+
+**Frontend:** HTML, CSS und JavaScript
+
+Diese Technologien ermöglichen eine übersichtliche Benutzeroberfläche ohne zusätzliches Frontend-Framework.
+
+**Backend:** Node.js mit Express
+
+Express eignet sich für die Umsetzung von Webanwendungen und REST-Schnittstellen. Durch die Verwendung von JavaScript kann dieselbe Programmiersprache im Frontend und Backend genutzt werden.
+
+**Datenbank:** PostgreSQL
+
+PostgreSQL unterstützt relationale Datenmodelle, Transaktionen und Datenintegrität. Dies ist besonders wichtig für Teilnehmeranmeldungen und die Vermeidung von Überbuchungen.
+
+**API:** REST
+
+REST ermöglicht klar definierte Schnittstellen für Benutzer, Veranstaltungen und Anmeldungen.
+
+**Versionsverwaltung:** Git und GitHub
+
+GitHub wird für die gemeinsame Entwicklung, Dokumentation und Aufgabenverwaltung verwendet.
+
+### 8.4 Kritische Bewertung
+
+Der vorgeschlagene Stack ist für CatchUp grundsätzlich geeignet. Allerdings müssen folgende Punkte geprüft werden:
+
+- Verfügt das Team über ausreichende JavaScript-Kenntnisse?
+- Ist Express für die geplante Anwendung sinnvoll?
+- Kann PostgreSQL in der Entwicklungsumgebung einfach eingerichtet werden?
+- Ist eine separate REST-API für das gewählte Architekturmodell erforderlich?
+- Sind die Technologien innerhalb des Semesters realistisch einsetzbar?
+
+Die endgültige Auswahl erfolgt nach Abstimmung im Projektteam.
 
 Die Vorschläge wurden anhand der Projektanforderungen, des Semesterumfangs, der Komplexität und der Wartbarkeit kritisch verglichen.
 
