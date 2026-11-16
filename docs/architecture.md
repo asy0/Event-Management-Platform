@@ -216,3 +216,93 @@ flowchart TB
 - **Weboberfläche:** Zeigt die Benutzeroberfläche an.
 - **Backend:** Verarbeitet Benutzer, Events und Anmeldungen.
 - **Datenbank:** Speichert Benutzer, Events und Anmeldungen.
+
+
+
+## 10. Datenmodell – Entity-Relationship-Diagramm
+
+### 10.1 Ziel
+
+Das Datenmodell beschreibt die Speicherung von Benutzern, Veranstaltungen und Anmeldungen in CatchUp.
+
+Es berücksichtigt Benutzerrollen, Eventkapazitäten und die Vermeidung von Doppelanmeldungen.
+
+### 10.2 ER-Diagramm
+
+```mermaid
+erDiagram
+    USERS ||--o{ EVENTS : organisiert
+    USERS ||--o{ REGISTRATIONS : erstellt
+    EVENTS ||--o{ REGISTRATIONS : hat
+
+    USERS {
+        int id PK
+        string name
+        string email UK
+        string password_hash
+        string role
+        datetime created_at
+    }
+
+    EVENTS {
+        int id PK
+        int organizer_id FK
+        string title
+        string description
+        string location
+        datetime start_at
+        datetime end_at
+        int max_participants
+        string status
+    }
+
+    REGISTRATIONS {
+        int id PK
+        int user_id FK
+        int event_id FK
+        datetime registered_at
+        string status
+    }
+```
+
+### 10.3 Beschreibung der Tabellen
+
+**USERS**
+
+Speichert die Benutzerkonten. Die Rolle unterscheidet zwischen Teilnehmern und Veranstaltern. Passwörter werden ausschließlich als sichere Hashwerte gespeichert.
+
+**EVENTS**
+
+Speichert Informationen über Veranstaltungen. Jede Veranstaltung gehört zu einem Veranstalter.
+
+**REGISTRATIONS**
+
+Verbindet Benutzer mit Veranstaltungen und speichert den jeweiligen Anmeldestatus.
+
+### 10.4 Beziehungen
+
+- Ein Veranstalter kann mehrere Events organisieren.
+- Ein Event gehört genau einem Veranstalter.
+- Ein Benutzer kann sich für mehrere Events anmelden.
+- Ein Event kann mehrere Anmeldungen besitzen.
+- Jede Anmeldung gehört genau einem Benutzer und einem Event.
+
+### 10.5 Datenintegrität und Geschäftsregeln
+
+- Jede E-Mail-Adresse muss eindeutig sein.
+- Die maximale Teilnehmerzahl muss größer als null sein.
+- Das Enddatum eines Events muss nach dem Startdatum liegen.
+- Die Kombination aus user_id und event_id muss eindeutig sein.
+- Abgesagte Anmeldungen zählen nicht zur belegten Kapazität.
+- Die Anzahl aktiver Anmeldungen darf die Eventkapazität nicht überschreiten.
+- Kapazitätsprüfung und Anmeldung müssen innerhalb einer Datenbanktransaktion erfolgen, um gleichzeitige Überbuchungen zu verhindern.
+- Nur berechtigte Veranstalter dürfen ihre Events bearbeiten.
+- Fremdschlüssel sichern die Beziehungen zwischen den Tabellen.
+
+### 10.6 Kritische Bewertung
+
+Das Modell verwendet drei zentrale Tabellen und vermeidet unnötige Komplexität.
+
+Eine separate Rollentabelle, Ticketverwaltung und Zahlungsdaten sind für das MVP nicht erforderlich.
+
+Die konkrete Umsetzung von Datenbank-Constraints und Transaktionen wird in der Implementierungsphase festgelegt.
