@@ -184,3 +184,35 @@ Die Vorschläge wurden anhand der Projektanforderungen, des Semesterumfangs, der
 Die KI kann die technischen Möglichkeiten erläutern, kennt jedoch nicht automatisch die tatsächlichen Fähigkeiten des Entwicklungsteams oder alle Rahmenbedingungen des Projekts.
 
 Daher ist die Empfehlung vorläufig und muss vom Projektteam geprüft und bestätigt werden.
+
+
+
+## 9. Architekturdiagramm – C4 Container View
+
+Das folgende Diagramm zeigt die geplanten Hauptbestandteile der CatchUp-Plattform. Die Technologien sind vorläufig und werden vom Team noch bestätigt.
+
+```mermaid
+flowchart TB
+    T["Teilnehmer"]
+    V["Veranstalter"]
+
+    subgraph C["CatchUp – Systemgrenze"]
+        W["Weboberfläche<br/>HTML, CSS, JavaScript"]
+        B["Backend<br/>Node.js + Express<br/>Modularer Monolith"]
+        D[("PostgreSQL<br/>Datenbank")]
+
+        W -->|"HTTP / REST"| B
+        B -->|"SQL"| D
+    end
+
+    T -->|"Events suchen und buchen"| W
+    V -->|"Events und Anmeldungen verwalten"| W
+```
+
+### Beschreibung
+
+- **Teilnehmer:** Suchen Events, sehen Details und melden sich an.
+- **Veranstalter:** Erstellen und verwalten Events.
+- **Weboberfläche:** Zeigt die Benutzeroberfläche an.
+- **Backend:** Verarbeitet Benutzer, Events und Anmeldungen.
+- **Datenbank:** Speichert Benutzer, Events und Anmeldungen.
