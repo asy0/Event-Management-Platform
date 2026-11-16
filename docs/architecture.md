@@ -463,3 +463,91 @@ Eine separate Bereitstellung des Backends ist dafür nicht notwendig. Die API ka
 Die Session-Authentifizierung ist eine vorläufige Designentscheidung. Ihre Umsetzung, der CSRF-Schutz und die Berechtigungsregeln müssen in der Implementierungsphase getestet werden.
 
 Die API ist derzeit ein Entwurf. Die endgültigen Schnittstellen werden mit dem Projektteam abgestimmt.
+
+
+## 12. Kritische Architekturprüfung und AI-Reflexion
+
+### 12.1 Einsatz von KI
+
+KI wurde in Phase 2 zur Unterstützung folgender Aufgaben eingesetzt:
+
+- Vergleich zweier Architekturvarianten
+- Untersuchung möglicher Technologien
+- Erstellung eines Architekturdiagramms
+- Entwurf des relationalen Datenmodells
+- Definition der REST-API
+- Vorbereitung der Architecture Decision Records
+- Strukturierung des Hosting-Vergleichs
+
+Die KI-generierten Inhalte dienen als Vorschläge und müssen durch das Projektteam bewertet werden.
+
+### 12.2 Kritische Bewertung der Architektur
+
+**Architekturkomplexität**
+
+Ein modularer Monolith wurde vorgeschlagen, da eine Microservices-Architektur für den aktuellen Projektumfang unnötige Komplexität verursachen würde.
+
+**Technologieauswahl**
+
+Node.js, Express und PostgreSQL sind technisch geeignet. Die endgültige Auswahl hängt jedoch von den Kenntnissen des Teams ab.
+
+**Datenintegrität**
+
+PostgreSQL unterstützt Transaktionen, verhindert aber Überbuchungen nicht automatisch. Die Kapazitätskontrolle muss durch geeignete Transaktionen und Sperrmechanismen implementiert werden.
+
+**Sicherheit**
+
+Authentifizierung, Autorisierung, CSRF-Schutz, sichere Passwortspeicherung und Eingabevalidierung müssen in der Implementierungsphase konkret umgesetzt und getestet werden.
+
+**Hosting**
+
+Render ist eine vorläufige Empfehlung. Kosten, Datenschutz, Verfügbarkeit und Backup-Möglichkeiten müssen vor dem Deployment erneut geprüft werden.
+
+### 12.3 Identifizierte Risiken
+
+| Risiko | Gegenmaßnahme |
+|---|---|
+| Überbuchung | Transaktionen und Sperrmechanismen |
+| Doppelanmeldung | Eindeutige Datenbankregel |
+| Unberechtigter Zugriff | Rollenbasierte Zugriffskontrolle |
+| Datenverlust | Backups und Wiederherstellungstests |
+| Hostingkosten | Budgetüberwachung |
+| Zeitüberschreitung | Konzentration auf MVP-Funktionen |
+| Fehlerhafte KI-Vorschläge | Manuelle Prüfung und technische Tests |
+
+### 12.4 Offene Architekturfragen
+
+Vor der Implementierung müssen folgende Punkte geklärt werden:
+
+- Bestätigung des Technologie-Stacks durch das Team
+- Entscheidung über die Hosting-Plattform
+- Festlegung der Session-Verwaltung
+- Definition der Eventstatus und ihrer Übergänge
+- Prüfung der API-Endpunkte auf Vollständigkeit
+- Abstimmung der Architektur mit den MVP-Anforderungen
+
+### 12.5 Definition of Done – Phase 2
+
+Die Architekturphase gilt als abgeschlossen, wenn:
+
+- [x] Mindestens zwei Architekturvarianten dokumentiert wurden.
+- [x] Technologien verglichen und vorläufig begründet wurden.
+- [x] Ein Architekturdiagramm erstellt wurde.
+- [x] Ein relationales Datenmodell dokumentiert wurde.
+- [x] REST-API-Endpunkte spezifiziert wurden.
+- [x] Mindestens zwei ADRs erstellt wurden.
+- [x] Hosting-Möglichkeiten verglichen wurden.
+- [x] KI-Vorschläge kritisch reflektiert wurden.
+- [ ] Das Projektteam die Architekturentscheidungen bestätigt hat.
+- [ ] Die Konsistenz mit den Anforderungen aus Phase 1 vollständig überprüft wurde.
+
+### 12.6 Fazit
+
+Die vorgeschlagene Architektur bietet eine realistische Grundlage für die Entwicklung von CatchUp.
+
+Die Kombination aus modularer Struktur, relationaler Datenbank und REST-API unterstützt die wichtigsten Funktionen der Plattform.
+
+Die Architektur bleibt bewusst einfach, um die Umsetzung innerhalb eines Semesters zu ermöglichen.
+
+Vor Beginn der Implementierung müssen die offenen Entscheidungen gemeinsam im Team geklärt werden.
+
