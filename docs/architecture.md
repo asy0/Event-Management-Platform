@@ -487,19 +487,23 @@ Der angemeldete Benutzer wird über seine Session identifiziert.
 }
 ```
 
-### 11.8 Sicherheits- und Geschäftsregeln
 
-- Eingaben werden serverseitig validiert.
-- Passwörter werden mit einem geeigneten Passwort-Hashing-Verfahren gespeichert.
-- Session-Cookies verwenden HttpOnly, Secure und SameSite.
-- Zustandsändernde Anfragen werden gegen CSRF geschützt.
-- Veranstalter dürfen nur ihre eigenen Events bearbeiten.
-- Teilnehmer dürfen nur ihre eigenen Anmeldungen stornieren.
-- Nur veröffentlichte und nicht abgesagte Events können gebucht werden.
-- Doppelanmeldungen werden durch eine eindeutige Datenbankregel verhindert.
-- Kapazitätsprüfung und Anmeldung erfolgen atomar innerhalb einer Datenbanktransaktion.
-- Stornierte Anmeldungen werden bei der Kapazitätsberechnung nicht berücksichtigt.
-- Fehlerantworten enthalten keine Passwörter oder internen Systemdetails.
+### Geschäftsregeln für das MVP
+
+1. Veranstalter melden sich mit einem bestehenden Konto an.
+2. Teilnehmer benötigen kein Benutzerkonto.
+3. Teilnehmer registrieren sich mit Name und E-Mail-Adresse.
+4. Jede E-Mail-Adresse darf sich pro Event nur einmal anmelden.
+5. Die Kombination aus event_id und participant_id ist eindeutig.
+6. Anmeldungen sind nur für veröffentlichte, zukünftige Events möglich.
+7. Die maximale Teilnehmerzahl muss größer als null sein.
+8. Die Anzahl bestätigter Anmeldungen darf die maximale Teilnehmerzahl nicht überschreiten.
+9. Kapazitätsprüfung und Speicherung erfolgen innerhalb einer Datenbanktransaktion.
+10. Bei ausgebuchten Events wird keine weitere Anmeldung akzeptiert.
+11. Nur der zuständige Veranstalter darf seine Events bearbeiten und Teilnehmerlisten einsehen.
+12. Die Stornierung einer Teilnehmeranmeldung ist nicht Bestandteil des MVP.
+13. Der Versand automatischer E-Mails ist nicht Bestandteil des MVP.
+
 
 ### 11.9 Kritische Bewertung
 
